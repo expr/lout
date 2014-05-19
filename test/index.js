@@ -234,6 +234,19 @@ describe('Lout', function () {
         });
     });
 
+    it('should detect references', function(done) {
+
+        server.inject('/docs?path=/withref', function (res) {
+
+            expect(res.result).to.contain('reference');
+
+            var $ = cheerio.load(res.result);
+            expect($('.reference dd:last-child').text()).to.equal('a');
+
+            done();
+        });
+    });
+
     describe('Index', function () {
 
         it('doesn\'t throw an error when requesting the index when there are no POST routes', function (done) {
