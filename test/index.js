@@ -24,7 +24,7 @@ describe('Registration', function() {
 
         var server = new Hapi.Server();
 
-        server.pack.require('../', function () {
+        server.pack.register(require('../'), function () {
 
             var routes = server.table();
             expect(routes.length).to.equal(2);
@@ -36,7 +36,7 @@ describe('Registration', function() {
 
         var server = new Hapi.Server();
 
-        server.pack.require('../', { helpersPath: null, cssPath: null, endpoint: '/' }, function () {
+        server.pack.register({ plugin: require('../'), options: { helpersPath: null, cssPath: null, endpoint: '/' } }, function () {
 
             var routes = server.table();
             expect(routes.length).to.equal(1);
@@ -54,7 +54,7 @@ describe('Lout', function () {
 
         server.route(require('./routes/default'));
 
-        server.pack.require('../', function () {
+        server.pack.register(require('../'), function () {
 
             done();
         });
@@ -200,7 +200,7 @@ describe('Lout', function () {
         server.auth.strategy('testStrategy', 'testScheme');
 
         server.route(require('./routes/withauth'));
-        server.pack.require('../', function() {
+        server.pack.register(require('../'), function() {
             server.inject('/docs?path=/withauth', function (res) {
 
                 expect(res).to.exist;
@@ -273,7 +273,7 @@ describe('Lout', function () {
 
             server.route(require('./routes/withoutpost'));
 
-            server.pack.require('../', function () {
+            server.pack.register(require('../'), function () {
 
                 server.inject('/docs', function (res) {
 
@@ -292,8 +292,9 @@ describe('Customized Lout', function () {
 
         var server = new Hapi.Server();
 
-        server.pack.require({
-            '../': {
+        server.pack.register({
+            plugin: require('../'),
+            options: {
                 basePath: Path.join(__dirname, './custom-test-files')
             }
         }, function () {
@@ -306,8 +307,9 @@ describe('Customized Lout', function () {
 
         var server = new Hapi.Server();
 
-        server.pack.require({
-            '../': {
+        server.pack.register({
+            plugin: require('../'),
+            options: {
                 basePath: Path.join(__dirname, './custom-test-files'),
                 helpersPath: null,
                 cssPath: null
@@ -332,9 +334,7 @@ describe('Customized Lout', function () {
             }
         };
 
-        server.pack.require({
-            '../': options
-        }, function () {
+        server.pack.register({ plugin: require('../'), options: options }, function () {
 
             done();
         });
@@ -343,8 +343,9 @@ describe('Customized Lout', function () {
     it('should serve a custom css', function(done) {
         var server = new Hapi.Server();
 
-        server.pack.require({
-            '../': {
+        server.pack.register({
+            plugin: require('../'),
+            options: {
                 cssPath: Path.join(__dirname, './custom-test-files/css')
             }
         }, function () {
