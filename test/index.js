@@ -288,19 +288,18 @@ describe('Lout', function () {
 
 describe('Customized Lout', function () {
 
-    it('should fail with a basePath without helpers', function(done) {
+    it('should succeed with a basePath without helpers', function(done) {
 
         var server = new Hapi.Server();
 
-        expect(function() {
+        server.pack.require({
+            '../': {
+                basePath: Path.join(__dirname, './custom-test-files')
+            }
+        }, function () {
 
-            server.pack.require({
-                '../': {
-                    basePath: Path.join(__dirname, './custom-test-files')
-                }
-            }, function () {});
-        }).to.throw(Error, 'ENOENT');
-        done();
+            done();
+        });
     });
 
     it('should succeed with a correct configuration', function(done) {
@@ -313,6 +312,28 @@ describe('Customized Lout', function () {
                 helpersPath: null,
                 cssPath: null
             }
+        }, function () {
+
+            done();
+        });
+    });
+
+    it('should succeed with a custom engine', function(done) {
+
+        var server = new Hapi.Server();
+
+        var options = {
+            engines: {
+                custom: {
+                    module: {
+                        compile: function() {}
+                    }
+                }
+            }
+        };
+
+        server.pack.require({
+            '../': options
         }, function () {
 
             done();
